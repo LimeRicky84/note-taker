@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs-js");
 const uuid = require("./helpers/uuid");
 
-const PORT = 3001;
+const PORT = /ric-note.herokuapp.com/;
 const app = express();
 
 let notes = require("./db/db.json");
@@ -46,22 +46,22 @@ app.post("/api/notes", (req, res) => {
       id: ident,
     };
     notes.push(newNote);
-    const noteString = JSON.stringify(notes);
+    const noteString = JSON.stringify(notes, null, 2);
     fs.writeFile("db/db.json", noteString, (err) => {
-      if (err) {
-        console.error(err);
-      } else {
-        const parsedNotes = JSON.parse(data);
-        parsedNotes.push(noteString);
-      }
-    });
+        if (err) {
+          console.error(err);
+        } else {
+          const parsedNotes = JSON.parse(noteString);
+          parsedNotes.push(noteString);
+        }
+      });
 
     const response = {
-      status: "Note successfully saved to db.json",
+      status: "Note saved to db.json",
       body: newNote,
     };
 
-    console.log(response);
+    // console.log(response);
     res.status(201).json(response);
   } else {
     res.status(400).json("All fields required");
@@ -72,18 +72,19 @@ app.post("/api/notes", (req, res) => {
 app.delete("/api/notes/:id", (req, res) => {
   let noteId = req.params.id;
   fs.readFile("db/db.json", "utf8", (err, data) => {
+    if (err) console.log(err)
     let currentNotes = JSON.parse(data).filter((note) => {
       return note.id !== noteId;
     });
     notes = currentNotes;
-    const noteString = JSON.stringify(currentNotes);
-    fs.writeFile("db/db.json", noteString, (err) => {
+    const stringNote = JSON.stringify(currentNotes);
+    fs.writeFile("db/db.json", stringNote, (err) => {
       if (err) console.log(err);
       else {
-        console.log("Note deleted");
+        console.log("Note deleted from db.json");
       }
     });
-    res.json(noteString);
+    res.json(stringNote);
   });
 });
 app.listen(PORT, () =>

@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "title": "Sample Note Title",
+    "text": "Sample Note Text",
+    "id": "1656783588129"
+  },
+  {
+    "title": "Sample Note 2",
+    "text": "Sample note text\n\n\nMore text\n\n\ntext",
+    "id": "1656783665739"
+  }
+]
