@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs-js");
 const uuid = require("./helpers/uuid");
 
-const PORT = /ric-note.herokuapp.com/;
+const PORT = process.env.PORT || 8080;
 const app = express();
 
 let notes = require("./db/db.json");
